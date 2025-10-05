@@ -1,0 +1,4 @@
+- Convert user typ from enum to table
+- ON DELETE CASCADE => ON DELETE RESTRICT,
+-
+- Retry bill id uniqueness

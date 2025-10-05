@@ -1,0 +1,43 @@
+[workspace.lints.rust]
+unsafe_code = "forbid"
+# unused = { level = "allow", priority = -1 } # For exploratory dev.
+
+[workspace]
+resolver = "2"
+members = [
+  # -- Application Libraries
+  "crates/libs/lib-auth", # e.g., for pwd, token.
+  "crates/libs/lib-web",
+  "crates/libs/lib-utils", # e.g., model, ctx, config.
+  # -- Application Services
+  "crates/services/web-server",
+  # -- Tools
+  "crates/tools/gen-key",
+  "crates/tools/gen-pass",
+]
+
+# NOTE: Only the crates that are utilized in two or more sub-crates and benefit from global management
+#       are handled in workspace.dependencies. Other strategies may also be valid.
+[workspace.dependencies]
+# -- Serde
+axum = { version = "0.8", features = ["macros", "ws"] }
+# derive_more = { version = "2", features = ["from", "display"] }
+rand = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_with = { version = "3", features = ["time_0_3"] }
+# -- Data
+# Note: we lock modql version during rcs
+sqlx = { version = "0.8", features = ["macros", "runtime-tokio", "postgres", "uuid", "time", "chrono"] }
+chrono = "0.4"
+strum_macros = { version = "0.27" }
+# -- Others
+time = { version = "0.3", features = ["formatting", "parsing", "serde"] }
+thiserror = { version = "2" }
+# -- Web
+tokio = { version = "1", features = ["full"] }
+tower-cookies = "0.11"
+tower-http = { version = "0.6", features = ["fs"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1", features = ["v4", "fast-rng"] }
