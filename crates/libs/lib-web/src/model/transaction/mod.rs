@@ -70,10 +70,15 @@ impl TransactionBmc {
         let unit_types = transaction_c
             .iter()
             .filter_map(|v| v.unit_cost.as_ref())
-            .map(|v| v.unit_type.trim().to_lowercase())
-            .collect::<HashSet<String>>()
+            .map(|v| v.unit_type.trim())
+            .collect::<HashSet<&str>>()
             .into_iter()
-            .collect::<Vec<String>>();
+            .collect::<Vec<&str>>();
+
+        let per_unit_costs = transaction_c
+            .iter()
+            .filter_map(|v| v.unit_cost.as_ref())
+            .map(|v| (v.unit_type.trim(), v.cost_per_unit));
 
         // Start the transaction
         let mm = mm.new_with_txn();
@@ -149,6 +154,44 @@ impl TransactionBmc {
         mm.dbx().execute(sqlx_query).await?;
         // endregion: --- Insert unit_type
 
+        // region:    --- Insert unit_cost
+
+        let (unit_types, costs_per_unit): (Vec<&str>, Vec<f64>) =
+            per_unit_costs.unzip();
+
+        let sqlx_query = sqlx::query_as::<_, (String, f64)>(
+            "SELECT unit_type, cost_per_unit FROM UNNEST(
+                $1::text[],
+                $2::float8[]
+        	 ) AS t(unit_type, cost_per_unit)
+            WHERE 
+            (t.unit_type, t.cost_per_unit)
+            NOT IN (
+                SELECT unit_type, cost_per_unit FROM unit_cost uc
+                INNER JOIN unit_type ut
+                ON uc.unit_type_serial_id = ut.serial_id
+            );",
+        )
+        .bind(unit_types)
+        .bind(costs_per_unit);
+
+        let (new_unit_types, new_unit_types_costs): (Vec<String>, Vec<f64>) =
+            mm.dbx().fetch_all(sqlx_query).await?.into_iter().unzip();
+
+        let sqlx_query = sqlx::query(
+            "INSERT INTO unit_cost (unit_type_serial_id, cost_per_unit) 
+                SELECT ut.serial_id, t.cost_per_unit FROM
+                UNNEST(
+                    $1::text[],
+                    $2::float8[]
+            	) AS t(unit_type, cost_per_unit) INNER JOIN unit_type ut ON t.unit_type = ut.name;",
+        )
+        .bind(new_unit_types)
+        .bind(new_unit_types_costs);
+
+        mm.dbx().execute(sqlx_query).await?;
+        // endregion: --- Insert unit_cost
+
         for transaction in transaction_c {
             let TransactionForCreate {
                 name,
@@ -193,13 +236,15 @@ impl TransactionBmc {
 
             if let Some(unit) = unit_cost {
                 let sqlx_query = sqlx::query(
-                    "INSERT INTO unit_cost (transaction_serial_id, unit_type_serial_id, cost_per_unit, unit) VALUES
-                    ($1, (SELECT serial_id FROM unit_type u WHERE u.name = $2 LIMIT 1), $3, $4)",
+                    "INSERT INTO transaction_unit (transaction_serial_id, unit,unit_cost_serial_id) VALUES
+                    ($1, $2,
+                    (SELECT uc.serial_id FROM unit_cost uc WHERE
+                    (uc.unit_type_serial_id, uc.cost_per_unit) <> ((SELECT ut.serial_id FROM unit_type ut WHERE ut.name = $3), $4) LIMIT 1))",
                 )
                 .bind(transaction_id)
-                .bind(unit.unit_type.trim().to_lowercase())
-                .bind(unit.cost_per_unit)
-                .bind(unit.unit);
+                .bind(unit.unit)
+                .bind(unit.unit_type.trim())
+                .bind(unit.cost_per_unit);
 
                 mm.dbx().execute(sqlx_query).await?;
             }
