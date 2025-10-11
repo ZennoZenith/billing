@@ -5,7 +5,7 @@ use crate::error::Result;
 use crate::error::{ClientError, Error};
 use crate::middleware::mw_req_stamp::ReqStamp;
 use axum::http::{Method, Uri};
-use lib_utils::time::{format_time, now_utc};
+use lib_utils::time::TimeRfc3339;
 use serde::Serialize;
 use serde_json::{Value, json};
 use serde_with::skip_serializing_none;
@@ -28,16 +28,16 @@ pub async fn log_request(
 
     // -- Prep Req Information
     let ReqStamp { uuid, time_in } = req_stamp;
-    let now = now_utc();
-    let duration: Duration = now - time_in;
+    let now = TimeRfc3339::now_utc();
+    let duration: Duration = now.inner() - time_in.inner();
     // duration_ms in milliseconds with microseconds precision.
     let duration_ms = (duration.as_seconds_f64() * 1_000_000.).floor() / 1_000.;
 
     // Create the RequestLogLine
     let log_line = RequestLogLine {
         uuid: uuid.to_string(),
-        timestamp: format_time(now), // LogLine timestamp ("time_out")
-        time_in: format_time(time_in),
+        timestamp: now.format_time(), // LogLine timestamp ("time_out")
+        time_in: time_in.format_time(),
         duration_ms,
 
         http_path: uri.to_string(),

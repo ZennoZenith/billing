@@ -6,7 +6,7 @@ pub use self::error::{Error, Result};
 
 use crate::config::auth_config;
 use lib_utils::b64::{b64u_decode_to_string, b64u_encode};
-use lib_utils::time::{now_utc, now_utc_plus_sec_str, parse_utc};
+use lib_utils::time::TimeRfc3339;
 use std::fmt::Display;
 use std::str::FromStr;
 use uuid::Uuid;
@@ -92,7 +92,7 @@ fn generate_token(
 ) -> Result<Token> {
     // -- Compute the two first components.
     let ident = ident.to_string();
-    let exp = now_utc_plus_sec_str(duration_sec);
+    let exp = TimeRfc3339::now_utc_plus_sec_str(duration_sec);
 
     // -- Sign the two first components.
     let sign_b64u = token_sign_into_b64u(&ident, &exp, token_salt, key)?;
@@ -122,9 +122,9 @@ fn validate_token_sign_and_exp(
     }
 
     // -- Validate expiration.
-    let origin_exp =
-        parse_utc(&origin_token.exp).map_err(|_| Error::ExpNotIso)?;
-    let now = now_utc();
+    let origin_exp = TimeRfc3339::parse_utc(&origin_token.exp)
+        .map_err(|_| Error::ExpNotIso)?;
+    let now = TimeRfc3339::now_utc().inner();
 
     if origin_exp < now {
         return Err(Error::Expired);

@@ -5,15 +5,14 @@ use axum::http::Request;
 use axum::http::request::Parts;
 use axum::middleware::Next;
 use axum::response::Response;
-use lib_utils::time::now_utc;
-use time::OffsetDateTime;
+use lib_utils::time::TimeRfc3339;
 use tracing::debug;
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]
 pub struct ReqStamp {
     pub uuid: Uuid,
-    pub time_in: OffsetDateTime,
+    pub time_in: TimeRfc3339,
 }
 
 pub async fn mw_req_stamp_resolver(
@@ -22,7 +21,7 @@ pub async fn mw_req_stamp_resolver(
 ) -> Result<Response> {
     debug!("{:<12} - mw_req_stamp_resolver", "MIDDLEWARE");
 
-    let time_in = now_utc();
+    let time_in = TimeRfc3339::now_utc();
     let uuid = Uuid::new_v4();
 
     req.extensions_mut().insert(ReqStamp { uuid, time_in });

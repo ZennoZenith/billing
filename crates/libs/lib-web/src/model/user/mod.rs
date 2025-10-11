@@ -3,7 +3,7 @@ use crate::{
     model::{ModelManager, base::DbBmc},
 };
 use lib_auth::pwd::{self, ContentToHash};
-use lib_utils::{b58::b58_encode, time::now_utc};
+use lib_utils::{b58::b58_encode, time::TimeRfc3339};
 use rand::RngCore as _;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
@@ -113,7 +113,7 @@ impl UserBmc {
         })
         .await?;
 
-        let now = now_utc();
+        let now = TimeRfc3339::now_utc();
 
         let sqlx_query = sqlx::query_as::<_, (i64,)>(
             "INSERT INTO users (user_id, name, email, cid, mid, ctime, mtime) values ($1, $2, $3,
@@ -125,7 +125,7 @@ impl UserBmc {
         .bind(name)
         .bind(email)
         .bind(ctx.user_id())
-        .bind(now);
+        .bind(now.inner() );
 
         // NOTE: For now, we will use the _txn for all create.
         //       We could have a with_txn as function argument if perf is an issue (it should not be)
@@ -140,7 +140,7 @@ impl UserBmc {
         .bind(pwd)
         .bind(pwd_salt)
         .bind(ctx.user_id())
-        .bind(now);
+        .bind(now.inner());
 
         mm.dbx().execute(sqlx_query).await?;
 
@@ -273,7 +273,7 @@ impl UserBmc {
         })
         .await?;
 
-        let now = now_utc();
+        let now = TimeRfc3339::now_utc();
 
         let sqlx_query = sqlx::query(
             "UPDATE auth SET
@@ -286,7 +286,7 @@ impl UserBmc {
         .bind(user_id)
         .bind(pwd)
         .bind(ctx.user_id())
-        .bind(now);
+        .bind(now.inner());
 
         let _count = mm.dbx().execute(sqlx_query).await?;
 
