@@ -6,7 +6,7 @@ POST http://localhost:8080/seller
 }]
 HTTP 200
 [Captures]
-seller_id: jsonpath "$['result'].['sellers'][0].['sellerId']" 
+seller_id: jsonpath "$.result.sellers[0].sellerId" 
 
 
 POST http://localhost:8080/bill
@@ -16,7 +16,7 @@ POST http://localhost:8080/bill
 }
 HTTP 200
 [Captures]
-bill_id: jsonpath "$['result'].['billId']" 
+bill_id: jsonpath "$.result.billId" 
 
 
 POST http://localhost:8080/transaction

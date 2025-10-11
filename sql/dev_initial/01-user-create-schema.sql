@@ -7,9 +7,9 @@
 
 --   -- Timestamps
 --   cid bigint NOT NULL,
---   ctime timestamp with time zone NOT NULL,
+--   ctime TIMESTAMPZ NOT NULL,
 --   mid bigint NOT NULL,
---   mtime timestamp with time zone NOT NULL
+--   mtime TIMESTAMPZ NOT NULL
 -- );
 
 -- User
@@ -25,9 +25,9 @@ CREATE TABLE "users" (
 
   -- Timestamps
   cid bigint NOT NULL,
-  ctime timestamp with time zone NOT NULL,
+  ctime TIMESTAMPZ NOT NULL,
   mid bigint NOT NULL,
-  mtime timestamp with time zone NOT NULL
+  mtime TIMESTAMPZ NOT NULL
 );
 
 CREATE TABLE "auth" (
@@ -40,9 +40,9 @@ CREATE TABLE "auth" (
 
   -- Timestamps
   cid bigint NOT NULL,
-  ctime timestamp with time zone NOT NULL,
+  ctime TIMESTAMPZ NOT NULL,
   mid bigint NOT NULL,
-  mtime timestamp with time zone NOT NULL,
+  mtime TIMESTAMPZ NOT NULL,
 
   FOREIGN KEY(user_serial_id) 
     REFERENCES users (serial_id)

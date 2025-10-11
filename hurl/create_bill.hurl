@@ -14,7 +14,5 @@ POST http://localhost:8080/bill
   "remark": "Some bill remark",
   "sellerId": "{{seller_id}}"
 }
-[Captures]
-bill_id: jsonpath "$['result'].['billId']" 
 
 
