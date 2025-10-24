@@ -16,6 +16,9 @@ pub enum Error {
 // endregion: --- Error
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[cfg(feature = "sqlx")]
+#[derive(sqlx::Type)]
+#[sqlx(transparent)]
 pub struct TimeRfc3339(OffsetDateTime);
 
 impl TimeRfc3339 {
@@ -60,6 +63,13 @@ impl TryFrom<&str> for TimeRfc3339 {
     }
 }
 
+impl From<OffsetDateTime> for TimeRfc3339 {
+    fn from(value: OffsetDateTime) -> Self {
+        Self(value)
+    }
+}
+
+#[cfg(feature = "serde")]
 impl<'de> serde::de::Deserialize<'de> for TimeRfc3339 {
     fn deserialize<D>(
         deserializer: D,
@@ -81,7 +91,22 @@ impl<'de> serde::de::Deserialize<'de> for TimeRfc3339 {
     }
 }
 
+#[cfg(feature = "serde")]
+impl serde::Serialize for TimeRfc3339 {
+    fn serialize<S>(
+        &self,
+        serializer: S,
+    ) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let s = self.format_time();
+        serializer.serialize_str(&s)
+    }
+}
+
 // region:    --- Tests
+
 #[cfg(test)]
 mod tests {
     pub type Result<T> = std::result::Result<T, Error>;

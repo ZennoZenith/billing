@@ -1,6 +1,5 @@
 use lib_utils::envs::{get_env, get_env_parse};
-use std::{net::SocketAddr, sync::OnceLock, time::Duration};
-use tracing::info;
+use std::{net::SocketAddr, sync::OnceLock};
 
 pub fn web_config() -> &'static WebConfig {
     static INSTANCE: OnceLock<WebConfig> = OnceLock::new();
@@ -14,47 +13,17 @@ pub fn web_config() -> &'static WebConfig {
 
 #[allow(non_snake_case)]
 pub struct WebConfig {
+    pub TEMPLATE_FOLDER: String,
+    pub STATIC_FOLDER: String,
     pub HOST_PORT: SocketAddr,
-    // -- Db
-    pub DB_URL: String,
-    pub DB_MAX_CONNECTIONS: u32,
-    pub DB_CONNECTION_TIMEOUT: Duration,
 }
 
 impl WebConfig {
     fn load_from_env() -> lib_utils::envs::Result<WebConfig> {
-        let db_max_connections =
-            match get_env_parse::<u32>("SERVICE_DB_MAX_CONNECTIONS") {
-                Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                    info!(
-                        "{:<12} - SERVICE_DB_MAX_CONNECTIONS, using default",
-                        "MISSING-ENV"
-                    );
-                    Ok(5)
-                }
-                rest => rest,
-            };
-        let db_connections_timeout = match get_env_parse::<u64>(
-            "SERVICE_DB_CONNECTION_TIMEOUT_MS",
-        ) {
-            Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                info!(
-                    "{:<12} - SERVICE_DB_CONNECTION_TIMEOUT_MS, using default",
-                    "MISSING-ENV"
-                );
-                Ok(500)
-            }
-            rest => rest,
-        }?;
-
         Ok(WebConfig {
+            TEMPLATE_FOLDER: get_env("SERVICE_TEMPLATE_FOLDER")?,
+            STATIC_FOLDER: get_env("SERVICE_STATIC_FOLDER")?,
             HOST_PORT: get_env_parse("SERVICE_HOST_PORT")?,
-
-            DB_URL: get_env("SERVICE_DB_URL")?,
-            DB_MAX_CONNECTIONS: db_max_connections?,
-            DB_CONNECTION_TIMEOUT: Duration::from_millis(
-                db_connections_timeout,
-            ),
         })
     }
 }

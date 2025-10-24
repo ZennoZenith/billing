@@ -1,4 +1,4 @@
-use lib_web::model;
+use lib_core::model;
 
 pub type Result<T> = std::result::Result<T, Error>;
 

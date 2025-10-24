@@ -1,0 +1,29 @@
+<script src="/static/js/build/toasterTest.js" type="module" defer></script>
+<template id="test-toast-template">
+  <div class="flex flex-wrap gap-4 p-4">
+    <button
+      class="px-4 font-semibold active:scale-98 active:transition-all rounded-full text-info-content bg-info hover:bg-info/95"
+      data-emmit-toast-type="INFO"
+    >
+      Add Info Toast
+    </button>
+    <button
+      class="px-4 font-semibold active:scale-98 active:transition-all rounded-full text-success-content bg-success hover:bg-success/95"
+      data-emmit-toast-type="SUCCESS"
+    >
+      Add Success Toast
+    </button>
+    <button
+      class="px-4 font-semibold active:scale-98 active:transition-all rounded-full text-warning-content bg-warning hover:bg-warning/95"
+      data-emmit-toast-type="WARNING"
+    >
+      Add Warning Toast
+    </button>
+    <button
+      class="px-4 font-semibold active:scale-98 active:transition-all rounded-full text-error-content bg-error hover:bg-error/95"
+      data-emmit-toast-type="ERROR"
+    >
+      Add error Toast
+    </button>
+  </div>
+</template>

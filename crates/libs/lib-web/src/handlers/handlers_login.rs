@@ -1,14 +1,12 @@
-use crate::ctx::Ctx;
 use crate::error::{Error, Result};
-use crate::extractors::{JsonOrForm, JsonOrFormError};
-use crate::model::{
-    ModelManager,
-    user::{UserBmc, UserForCreate},
-};
 use crate::utils::token;
 
+use axum::extract::rejection::JsonRejection;
 use axum::{Json, extract::State};
 use lib_auth::pwd::{self, ContentToHash, SchemeStatus};
+use lib_core::ctx::Ctx;
+use lib_core::model::user::{UserBmc, UserForCreate};
+use lib_core::model::{self, ModelManager};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use tower_cookies::Cookies;
@@ -24,10 +22,7 @@ pub struct LoginPayload {
 pub async fn api_login_handler(
     State(mm): State<ModelManager>,
     cookies: Cookies,
-    payload_or_error: std::result::Result<
-        JsonOrForm<LoginPayload>,
-        JsonOrFormError,
-    >,
+    payload_or_error: std::result::Result<Json<LoginPayload>, JsonRejection>,
 ) -> Result<Json<Value>> {
     debug!("{:<12} - api_login_handler", "HANDLER");
 
@@ -41,7 +36,9 @@ pub async fn api_login_handler(
     let root_ctx = Ctx::root_ctx();
 
     // -- Get the user.
-    let user = UserBmc::get_by_email(&root_ctx, &mm, &email).await?;
+    let user = UserBmc::get_by_email(&root_ctx, &mm, &email)
+        .await
+        .map_err(model::Error::from)?;
     let user_id = user.user_id;
 
     // -- Validate the password.
@@ -62,7 +59,9 @@ pub async fn api_login_handler(
     // -- Update password scheme if needed
     if let SchemeStatus::Outdated = scheme_status {
         debug!("pwd encrypt scheme outdated, upgrading.");
-        UserBmc::update_pwd(&root_ctx, &mm, &user_id, &pwd_clear).await?;
+        UserBmc::update_pwd(&root_ctx, &mm, &user_id, &pwd_clear)
+            .await
+            .map_err(model::Error::from)?;
     }
 
     // -- Set web token.
@@ -110,10 +109,7 @@ pub struct LogoffPayload {
 // region:    --- Register
 pub async fn api_register_handler(
     State(mm): State<ModelManager>,
-    payload_or_error: std::result::Result<
-        JsonOrForm<UserForCreate>,
-        JsonOrFormError,
-    >,
+    payload_or_error: std::result::Result<Json<UserForCreate>, JsonRejection>,
 ) -> Result<Json<Value>> {
     debug!("{:<12} - api_login_handler", "HANDLER");
 
@@ -122,7 +118,9 @@ pub async fn api_register_handler(
     let root_ctx = Ctx::root_ctx();
 
     // -- Get the user id.
-    let user_id = UserBmc::create(&root_ctx, &mm, payload).await?;
+    let user_id = UserBmc::create(&root_ctx, &mm, payload)
+        .await
+        .map_err(model::Error::from)?;
     tracing::debug!("User id: {user_id}");
 
     // Create the success body.

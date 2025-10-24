@@ -1,12 +1,5 @@
 use crate::error::{Error, Result};
 use crate::utils::token::{AUTH_TOKEN, set_token_cookie};
-use crate::{
-    ctx::Ctx,
-    model::{
-        ModelManager,
-        user::{UserBmc, UserForAuth},
-    },
-};
 use axum::{
     body::Body,
     extract::{FromRequestParts, State},
@@ -15,12 +8,23 @@ use axum::{
     response::Response,
 };
 use lib_auth::token::{Token, validate_web_token};
+use lib_core::{
+    ctx::Ctx,
+    model::{
+        ModelManager,
+        user::{UserBmc, UserForAuth},
+    },
+};
 use serde::Serialize;
 use thiserror::Error;
 use tower_cookies::{Cookie, Cookies};
 use tracing::debug;
 
-pub async fn mw_ctx_require(ctx: Result<CtxW>, req: Request<Body>, next: Next) -> Result<Response> {
+pub async fn mw_ctx_require(
+    ctx: Result<CtxW>,
+    req: Request<Body>,
+    next: Next,
+) -> Result<Response> {
     debug!("{:<12} - mw_ctx_require - {ctx:?}", "MIDDLEWARE");
 
     ctx?;
@@ -43,7 +47,9 @@ pub async fn mw_ctx_resolver(
 
     let ctx_ext_result = ctx_resolve(mm, &cookies).await;
 
-    if ctx_ext_result.is_err() && !matches!(ctx_ext_result, Err(CtxExtError::TokenNotInCookie)) {
+    if ctx_ext_result.is_err()
+        && !matches!(ctx_ext_result, Err(CtxExtError::TokenNotInCookie))
+    {
         cookies.remove(Cookie::from(AUTH_TOKEN))
     }
 
@@ -62,16 +68,19 @@ async fn ctx_resolve(mm: ModelManager, cookies: &Cookies) -> CtxExtResult {
         .ok_or(CtxExtError::TokenNotInCookie)?;
 
     // -- Parse Token
-    let token: Token = token.parse().map_err(|_| CtxExtError::TokenWrongFormat)?;
+    let token: Token =
+        token.parse().map_err(|_| CtxExtError::TokenWrongFormat)?;
 
     // -- Get UserForAuth
-    let user: UserForAuth = UserBmc::first_by_user_id(&Ctx::root_ctx(), &mm, &token.ident)
-        .await
-        .map_err(|ex| CtxExtError::ModelAccessError(ex.to_string()))?
-        .ok_or(CtxExtError::UserNotFound)?;
+    let user: UserForAuth =
+        UserBmc::first_by_user_id(&Ctx::root_ctx(), &mm, &token.ident)
+            .await
+            .map_err(|ex| CtxExtError::ModelAccessError(ex.to_string()))?
+            .ok_or(CtxExtError::UserNotFound)?;
 
     // -- Validate Token
-    validate_web_token(&token, user.token_salt).map_err(|_| CtxExtError::FailValidate)?;
+    validate_web_token(&token, user.token_salt)
+        .map_err(|_| CtxExtError::FailValidate)?;
 
     // -- Update Token
     set_token_cookie(cookies, &user.user_id, user.token_salt)

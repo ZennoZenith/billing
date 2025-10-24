@@ -1,23 +1,26 @@
-mod api;
 mod error;
+mod routes_api;
+mod routes_web;
 
-pub use self::error::{Error, Result};
+use crate::routes_web::routes_static;
 
+use lib_core::model::ModelManager;
 use lib_web::{
     middleware::{
         mw_auth::mw_ctx_resolver, mw_req_stamp::mw_req_stamp_resolver,
         mw_res_map::mw_reponse_map,
     },
-    web_config,
+    renders, web_config,
 };
 
 use axum::{Router, middleware};
-use lib_web::model::ModelManager;
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_cookies::CookieManagerLayer;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
+
+pub use self::error::{Error, Result};
 
 // endregion: --- Modules
 
@@ -32,14 +35,14 @@ async fn main() -> Result<()> {
     // TODO: Conditional compile only in debug build
     // -- FOR DEV ONLY
     {
-        lib_web::_dev_utils::init_dev().await;
+        lib_core::_dev_utils::init_dev().await;
     }
 
     let mm = ModelManager::new().await?;
 
     let routes_all = Router::new()
-        .merge(api::routes_login::routes(mm.clone()))
-        .merge(api::routes_transaction::routes(mm.clone()))
+        .merge(routes_web::routes(mm.clone()))
+        .merge(routes_api::routes(mm.clone()))
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(mw_req_stamp_resolver))
@@ -52,7 +55,10 @@ async fn main() -> Result<()> {
                                                                   // .layer(middleware::from_fn(
                                                                   //     lib_web::middleware::mw_auth::mw_ctx_require,
                                                                   // )),
-        );
+        )
+        .nest("/static", routes_static::server_assets())
+        .route_service("/favicon.ico", routes_static::favicon())
+        .fallback(renders::fallback_render_not_found);
 
     // region:    --- Start Server
     // Note: For this block, ok to unwrap.

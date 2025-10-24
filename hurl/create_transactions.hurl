@@ -1,4 +1,4 @@
-POST http://localhost:8080/seller
+POST http://localhost:8080/api/seller
 [{
   "name": "sel {{newUuid}}"
 }, {
@@ -9,7 +9,7 @@ HTTP 200
 seller_id: jsonpath "$.result.sellers[0].sellerId" 
 
 
-POST http://localhost:8080/bill
+POST http://localhost:8080/api/bill
 {
   "remark": "Some bill remark",
   "sellerId": "{{seller_id}}"
@@ -19,14 +19,14 @@ HTTP 200
 bill_id: jsonpath "$.result.billId" 
 
 
-POST http://localhost:8080/transaction
+POST http://localhost:8080/api/transaction
 
 [{
   "name": "tr 1",
   "transactionTime": null,
   "remark": null,
   "tags": ["a", "b "],
-  "paymentMethod": "cash",
+  "paymentMethod": "Cash",
   "unitCost": {
     "unitType": "kg",
     "unit": 1.4,
@@ -39,7 +39,7 @@ POST http://localhost:8080/transaction
   "transactionTime": "2020-09-08T13:10:08.511Z",
   "remark": "Some remark",
   "tags": ["d", "c"],
-  "paymentMethod": "upi",
+  "paymentMethod": "Upi",
   "unitCost": {
     "unitType": "bag",
     "unit": 5,

@@ -5,7 +5,7 @@
 # Environments variables set for all "cargo ..." commands.
 [env]
 # Scope down tracing, to filter out external lib tracing.
-RUST_LOG = "web_server=debug,lib_core=debug,lib_web=debug,lib_auth=debug,lib_utils=debug,mock_server=debug"
+RUST_LOG = "web_server=debug,lib_core=debug,lib_web=debug,lib_auth=debug,lib_utils=debug"
 
 # -- Service Environment Variables
 # IMPORTANT:
@@ -18,7 +18,7 @@ RUST_LOG = "web_server=debug,lib_core=debug,lib_web=debug,lib_auth=debug,lib_uti
 # e.g., "welcome" type of passwords.
 # i.e., Encryption not needed.
 
-SERVICE_DB_URL = "postgres://test_user:dev_only_pwd@localhost/test_db"
+SERVICE_DB_URL = "postgres://example_user:dev_only_pwd@localhost/example_db"
 SERVICE_DB_MAX_CONNECTIONS = "5"
 SERVICE_DB_CONNECTION_TIMEOUT_MS = "500"
 
@@ -31,8 +31,8 @@ SERVICE_TOKEN_DURATION_SEC = "1800" # 30 minutes
 
 # SERVICE_HOST_PORT = "127.0.0.1:8080"
 SERVICE_HOST_PORT = "0.0.0.0:8080"
-SERVICE_MOCK_HOST_PORT = "0.0.0.0:8081"
 
 # This will be relative to Cargo.toml
 # In deployed images, probably use absolute path.
-# SERVICE_STATIC_FOLDER = "frontend/static"
+SERVICE_TEMPLATE_FOLDER = "frontend/templates"
+SERVICE_STATIC_FOLDER = "frontend/static"

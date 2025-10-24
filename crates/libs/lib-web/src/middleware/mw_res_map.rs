@@ -6,7 +6,6 @@ use crate::middleware::mw_req_stamp::ReqStamp;
 use axum::Json;
 use axum::http::{Method, Uri};
 use axum::response::{IntoResponse, Response};
-use serde_json::{json, to_value};
 use std::sync::Arc;
 use tracing::debug;
 
@@ -30,13 +29,13 @@ pub async fn mw_reponse_map(
         client_status_error
             .as_ref()
             .map(|(status_code, client_error)| {
-                let client_error = to_value(client_error).ok();
+                let client_error = serde_json::to_value(client_error).ok();
                 let message =
                     client_error.as_ref().and_then(|v| v.get("message"));
                 let detail =
                     client_error.as_ref().and_then(|v| v.get("detail"));
 
-                let client_error_body = json!({
+                let client_error_body = serde_json::json!({
                     "error": {
                         "message": message, // Variant name
                         "data": {

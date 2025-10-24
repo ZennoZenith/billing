@@ -10,6 +10,7 @@ fn main() -> Result<()> {
 
     let b64u = b64u_encode(key);
     println!("\nKey b64u encoded:\n{b64u}");
+    println!("\nKey lenght: {}", b64u.len());
 
     Ok(())
 }

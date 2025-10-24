@@ -15,4 +15,11 @@ base64 = "0.22"
 time = { workspace = true }
 thiserror = { workspace = true }
 strum_macros = { workspace = true }
-serde = { workspace = true }
+serde = { workspace = true, optional = true }
+sqlx = { workspace = true, optional = true, features = ["postgres", "time"] }
+
+[features]
+default = []
+# default = ["serde"]
+serde = ["dep:serde"]
+sqlx = ["dep:sqlx"]

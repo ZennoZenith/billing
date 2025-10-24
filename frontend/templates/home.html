@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+  <head>
+    {% include "head.html" %}
+    <title>Home</title>
+  </head>
+  <body>
+    {% include "navbar.html" %}
+    <main class="p-8 md:p-16 grid gap-8">
+      <p>
+        <a class="text-primary underline" href="/auth/login">Login</a>
+      </p>
+      <p>
+        <a class="text-primary underline" href="/auth/register">Register</a>
+      </p>
+    </main>
+    {% include "footer.html" %}
+  </body>
+</html>

@@ -14,7 +14,7 @@ async fn main() -> Result<()> {
         "/api/register",
         json!({
             "name": "Some name",
-            "email": "test@test.com",
+            "email": "example@example.com",
             "pwd_clear": "somepassword"
         }),
     );
@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
     let req_login = hc.do_post(
         "/api/login",
         json!({
-            "email": "test@test.com",
+            "email": "example@example.com",
             "pwd": "somepassword"
         }),
     );

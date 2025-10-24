@@ -1,9 +1,10 @@
 use crate::extractors::JsonOrFormError;
-use crate::{middleware, model};
+use crate::middleware;
 use axum::extract::rejection::{FormRejection, JsonRejection};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use lib_auth::{pwd, token};
+use lib_core::model;
 use serde::Serialize;
 use serde_with::{DisplayFromStr, serde_as};
 use std::sync::Arc;
@@ -16,7 +17,6 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[derive(Error, Debug, Serialize, strum_macros::AsRefStr)]
 #[serde(tag = "type", content = "data")]
 pub enum Error {
-    // -- Json Deserialization
     #[error("RouteNotExist: {0}")]
     RouteNotExist(String),
 
@@ -24,9 +24,13 @@ pub enum Error {
     #[error("JsonDeserialization: {0}")]
     JsonDeserialization(String),
 
-    // -- Json Deserialization
+    // -- Form Deserialization
     #[error("FormDeserialization: {0}")]
     FormDeserialization(String),
+
+    // -- Query Deserialization
+    #[error("QueryDeserialization: {0}")]
+    QueryDeserialization(String),
 
     // -- Login
     #[error("LoginFailPwdNotMatching: user_id: {user_id}")]
@@ -45,18 +49,6 @@ pub enum Error {
     Model(#[from] model::Error),
 
     #[error(transparent)]
-    User(#[from] model::user::Error),
-
-    #[error(transparent)]
-    Transaction(#[from] model::transaction::Error),
-
-    #[error(transparent)]
-    Seller(#[from] model::seller::Error),
-
-    #[error(transparent)]
-    Bill(#[from] model::bill::Error),
-
-    #[error(transparent)]
     Pwd(#[from] pwd::Error),
 
     #[error(transparent)]
@@ -68,6 +60,13 @@ pub enum Error {
         #[from]
         #[serde_as(as = "DisplayFromStr")]
         serde_json::Error,
+    ),
+
+    #[error(transparent)]
+    TeraRender(
+        #[from]
+        #[serde_as(as = "DisplayFromStr")]
+        tera::Error,
     ),
 
     #[error("UnsupportedMedia")]
@@ -151,6 +150,13 @@ impl Error {
                 },
             ),
 
+            QueryDeserialization(..) => (
+                StatusCode::BAD_REQUEST,
+                ClientError::QUERY_DESERIALIZE {
+                    message: "Some fields are missing or incorrect",
+                },
+            ),
+
             // // -- Login
             // LoginFailEmailNotFound
             // | LoginFailUserHasNoPwd { .. } |
@@ -162,13 +168,21 @@ impl Error {
             CtxExt(_) => (StatusCode::FORBIDDEN, ClientError::NO_AUTH),
 
             // -- Model
-            User(model::user::Error::UserNotUnique) => {
+            Model(model::Error::User(model::user::Error::UserNotUnique)) => {
                 (StatusCode::CONFLICT, ClientError::USER_ALREADY_EXISTS)
             }
-            User(model::user::Error::UserEmailNotFound)
-            | User(model::user::Error::UserNotFound { .. }) => {
-                (StatusCode::FORBIDDEN, ClientError::LOGIN_FAIL)
-            }
+            Model(model::Error::User(
+                model::user::Error::UserEmailNotFound,
+            ))
+            | Model(model::Error::User(model::user::Error::UserNotFound {
+                ..
+            })) => (StatusCode::FORBIDDEN, ClientError::LOGIN_FAIL),
+
+            // -- Tera.
+            TeraRender(_) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                ClientError::SERVICE_ERROR,
+            ),
 
             // -- Fallback.
             _ => (
@@ -186,6 +200,7 @@ pub enum ClientError {
     ROUTE_NOT_EXIST { uri: String },
     JSON_DESERIALIZE { message: &'static str },
     FORM_DESERIALIZE { message: &'static str },
+    QUERY_DESERIALIZE { message: &'static str },
     LOGIN_FAIL,
     NO_AUTH,
     ENTITY_NOT_FOUND { entity: &'static str, id: String },

@@ -1,9 +1,9 @@
 use crate::error::Result;
-use crate::model::ModelManager;
-use crate::model::bill::{BillBmc, BillForCreate};
 
 use axum::extract::rejection::JsonRejection;
 use axum::{Json, extract::State};
+use lib_core::model::bill::{BillBmc, BillForCreate};
+use lib_core::model::{self, ModelManager};
 use serde_json::{Value, json};
 use tracing::debug;
 
@@ -15,7 +15,9 @@ pub async fn create_handler(
 
     let payload = payload_or_error?.0;
 
-    let bill_id = BillBmc::create(&mm, payload).await?;
+    let bill_id = BillBmc::create(&mm, payload)
+        .await
+        .map_err(model::Error::from)?;
 
     // Create the success body.
     let body = Json(json!({

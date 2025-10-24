@@ -1,4 +1,4 @@
-POST http://localhost:8080/seller
+POST http://localhost:8080/api/seller
 [{
   "name": "sel {{newUuid}}"
 }, {
@@ -9,7 +9,7 @@ HTTP 200
 seller_id: jsonpath "$['result'].['sellers'][0].['sellerId']" 
 
 
-POST http://localhost:8080/bill
+POST http://localhost:8080/api/bill
 {
   "remark": "Some bill remark",
   "sellerId": "{{seller_id}}"
