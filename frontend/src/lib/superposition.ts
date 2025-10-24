@@ -71,6 +71,10 @@ export function Err<E extends Taged>(err: E) {
   return new Result<never, E>(undefined, err);
 }
 
-export const isOk = <T, E extends Taged>(value: Result<T, E>): value is Result<T, never> => value.isOk();
+export const isOk = <T, E extends Taged>(
+  value: Result<T, E>,
+): value is Result<T, never> => value.isOk();
 
-export const isErr = <T, E extends Taged>(value: Result<T, E>): value is Result<never, E> => value.isErr();
+export const isErr = <T, E extends Taged>(
+  value: Result<T, E>,
+): value is Result<never, E> => value.isErr();

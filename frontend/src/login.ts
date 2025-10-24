@@ -4,7 +4,9 @@ checkbox?.addEventListener("submit", login, false);
 
 async function login(event: Event) {
   event.preventDefault();
-  const currentTarget = (event as SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }).currentTarget;
+  const currentTarget = (
+    event as SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }
+  ).currentTarget;
 
   const formData = new FormData(currentTarget);
   const formEntries = Object.fromEntries(formData.entries());

@@ -64,7 +64,12 @@ export class Log {
     if (typeof option.message === "string") {
       log.push(`Message: ${option.message}`);
     } else {
-      const jsonOrError = catchErrorSync(JSON.stringify, option.message, null, 2);
+      const jsonOrError = catchErrorSync(
+        JSON.stringify,
+        option.message,
+        null,
+        2,
+      );
       if (isErr(jsonOrError)) {
         log.push(`Message: ${option.message}`);
       } else {

@@ -1,8 +1,13 @@
 default:
-  @just --list
+    just --list
 
 fmt:
-    dprint fmt *
+    echo "Formatting"
+    cd frontend && biome format --write
+
+lint:
+    echo "Linting"
+    cd frontend && biome lint --write
 
 dev-db:
     docker run --rm --name pg -p 5432:5432 -e POSTGRES_PASSWORD=welcome postgres:18

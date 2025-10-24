@@ -7,9 +7,9 @@ export class ToastTest extends HTMLElement {
 
   constructor() {
     super();
-    const maybeTemplate = document.getElementById("test-toast-template") as
-      | HTMLTemplateElement
-      | null;
+    const maybeTemplate = document.getElementById(
+      "test-toast-template",
+    ) as HTMLTemplateElement | null;
 
     if (!maybeTemplate) {
       throw new Error("toast-container-template not found");
@@ -18,7 +18,9 @@ export class ToastTest extends HTMLElement {
     this.toastTestTemplate = maybeTemplate;
   }
   connectedCallback() {
-    const templateContent = this.toastTestTemplate.content.cloneNode(true) as HTMLElement;
+    const templateContent = this.toastTestTemplate.content.cloneNode(
+      true,
+    ) as HTMLElement;
     this.appendChild(templateContent);
     const elements = document.querySelectorAll("[data-emmit-toast-type]");
     for (const element of elements) {
@@ -26,7 +28,9 @@ export class ToastTest extends HTMLElement {
       if (toastType === null) continue;
       if (!TOAST_TYPES.includes(toastType as ToastType)) continue;
 
-      element.addEventListener("click", () => showToast(toastType as ToastType));
+      element.addEventListener("click", () =>
+        showToast(toastType as ToastType),
+      );
     }
   }
 }

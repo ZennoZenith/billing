@@ -8,8 +8,8 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "daisyui": "^5.0.51",
-    "tailwindcss": "^4.1.12",
+    "daisyui": "^5.3.8",
+    "tailwindcss": "^4.1.16",
     "tsc-alias": "^1.8.16"
   },
   "peerDependencies": {

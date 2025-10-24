@@ -2,7 +2,7 @@ import { UnknowError } from "$lib/error.js";
 import { Err, Ok, type Result } from "$lib/superposition.js";
 
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function catchError<T>(

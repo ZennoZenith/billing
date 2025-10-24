@@ -3,60 +3,24 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "$type": [
-        "./src/types"
-      ],
-      "$type/*": [
-        "./src/types/*"
-      ],
-      "$utils": [
-        "./src/utils"
-      ],
-      "$utils/*": [
-        "./src/utils/*"
-      ],
-      "$api": [
-        "./src/api"
-      ],
-      "$api/*": [
-        "./src/api/*"
-      ],
-      "$constants": [
-        "./src/constants"
-      ],
-      "$constants/*": [
-        "./src/constants/*"
-      ],
-      "$schemas": [
-        "./src/schemas"
-      ],
-      "$schemas/*": [
-        "./src/schemas/*"
-      ],
-      "$icons": [
-        "./src/icons"
-      ],
-      "$icons/*": [
-        "./src/icons/*"
-      ],
-      "$components": [
-        "./src/components"
-      ],
-      "$components/*": [
-        "./src/components/*"
-      ],
-      "$features": [
-        "./src/features"
-      ],
-      "$features/*": [
-        "./src/features/*"
-      ],
-      "$lib": [
-        "./src/lib"
-      ],
-      "$lib/*": [
-        "./src/lib/*"
-      ]
+      "$type": ["./src/types"],
+      "$type/*": ["./src/types/*"],
+      "$utils": ["./src/utils"],
+      "$utils/*": ["./src/utils/*"],
+      "$api": ["./src/api"],
+      "$api/*": ["./src/api/*"],
+      "$constants": ["./src/constants"],
+      "$constants/*": ["./src/constants/*"],
+      "$schemas": ["./src/schemas"],
+      "$schemas/*": ["./src/schemas/*"],
+      "$icons": ["./src/icons"],
+      "$icons/*": ["./src/icons/*"],
+      "$components": ["./src/components"],
+      "$components/*": ["./src/components/*"],
+      "$features": ["./src/features"],
+      "$features/*": ["./src/features/*"],
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"]
       // "$root": [
       //   "./src"
       // ],

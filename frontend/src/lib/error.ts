@@ -12,7 +12,7 @@ const errorType = [
   // "ParseError",
 ] as const;
 
-export type ErrorType = typeof errorType[number] | ({} & string);
+export type ErrorType = (typeof errorType)[number] | ({} & string);
 
 export type ErrorObject = Readonly<{
   _tag: ErrorType;
@@ -136,11 +136,12 @@ export class UnknowError extends CustomError {
   constructor(error: unknown) {
     let message = "Unknow Message";
     if (
-      typeof error === "object"
-      && error !== null
-      && "message" in error
-      && typeof error.message === "string"
-    ) message = error.message;
+      typeof error === "object" &&
+      error !== null &&
+      "message" in error &&
+      typeof error.message === "string"
+    )
+      message = error.message;
     super("UnknownError", message);
     if (error instanceof Error) {
       this.error = error;
@@ -155,11 +156,12 @@ export class TagedError extends CustomError {
   constructor(error: Taged) {
     let message = "Unknow Message";
     if (
-      typeof error === "object"
-      && error !== null
-      && "message" in error
-      && typeof error.message === "string"
-    ) message = error.message;
+      typeof error === "object" &&
+      error !== null &&
+      "message" in error &&
+      typeof error.message === "string"
+    )
+      message = error.message;
     super(error._tag, message);
     if (error instanceof Error) {
       this.error = error;
@@ -214,7 +216,11 @@ export class ApiError extends CustomError {
 export class ValidationError extends CustomError {
   readonly validationError: Record<string, unknown>;
 
-  constructor(validationError: Record<string, unknown>, tag: ErrorType = "ValidationError", message?: string) {
+  constructor(
+    validationError: Record<string, unknown>,
+    tag: ErrorType = "ValidationError",
+    message?: string,
+  ) {
     super(tag, message ?? "Validation Error");
     this.validationError = validationError;
   }

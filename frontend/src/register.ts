@@ -6,7 +6,9 @@ registerForm?.addEventListener("submit", register, false);
 
 async function register(event: Event) {
   event.preventDefault();
-  const currentTarget = (event as SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }).currentTarget;
+  const currentTarget = (
+    event as SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }
+  ).currentTarget;
 
   const formData = new FormData(currentTarget);
   const formEntries = Object.fromEntries(formData.entries());

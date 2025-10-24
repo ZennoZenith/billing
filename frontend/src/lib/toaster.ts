@@ -1,5 +1,9 @@
 import type { Hover, ToastType } from "$type/index.ts";
-import { DEFAULT_TOAST_CLOSE_DURATION, DEFAULT_TOAST_DURATION, DEFAULT_TOAST_HOVER } from "$utils/constants.js";
+import {
+  DEFAULT_TOAST_CLOSE_DURATION,
+  DEFAULT_TOAST_DURATION,
+  DEFAULT_TOAST_HOVER,
+} from "$utils/constants.js";
 import { clamp, exhaustiveMatchingGuard, uuidv4 } from "$utils/helpers.js";
 import { Log } from "$utils/logger.js";
 
@@ -71,11 +75,15 @@ class Toast {
     this.durationMs = durationMs < 0 ? 0 : durationMs;
     this.createdAtMs = now;
     this._paused = options?.paused ?? false;
-    const maybeTemplate = document.getElementById("toast-template") as HTMLTemplateElement | null;
+    const maybeTemplate = document.getElementById(
+      "toast-template",
+    ) as HTMLTemplateElement | null;
     if (!maybeTemplate) {
       throw new Error("toast-template not found");
     }
-    const templateContent = maybeTemplate.content.cloneNode(true) as DocumentFragment;
+    const templateContent = maybeTemplate.content.cloneNode(
+      true,
+    ) as DocumentFragment;
     const templateContentDiv = templateContent.querySelector("div");
     if (!templateContentDiv) {
       throw new Error("toast-template does not have div element");
@@ -84,7 +92,9 @@ class Toast {
     this.lastFrameTime = performance.now();
     this.doneDuration = 0;
 
-    const maybeProgressBarElement = this._toastElement.querySelector("[data-id='progress']") as HTMLDivElement | null;
+    const maybeProgressBarElement = this._toastElement.querySelector(
+      "[data-id='progress']",
+    ) as HTMLDivElement | null;
     if (!maybeProgressBarElement) {
       throw new Error("maybeProgressBarElement not found");
     }
@@ -96,40 +106,39 @@ class Toast {
   private setupRest() {
     this.paused = this._paused;
 
-    const titleElement = this._toastElement.querySelector("[data-id='title']") as HTMLSpanElement | null;
+    const titleElement = this._toastElement.querySelector(
+      "[data-id='title']",
+    ) as HTMLSpanElement | null;
     if (titleElement) {
       titleElement.textContent = this.title;
     }
 
-    this._toastElement.querySelector("[data-id='closeButton']")?.addEventListener(
-      "click",
-      () => {
+    this._toastElement
+      .querySelector("[data-id='closeButton']")
+      ?.addEventListener("click", () => {
         Toaster.getInstance().remove(this.id);
-      },
-    );
+      });
 
-    this._toastElement.addEventListener(
-      "mouseenter",
-      () => {
-        Toaster.getInstance().pause(this.id);
-      },
-    );
-    this._toastElement.addEventListener(
-      "mouseleave",
-      () => {
-        Toaster.getInstance().resume(this.id);
-      },
-    );
+    this._toastElement.addEventListener("mouseenter", () => {
+      Toaster.getInstance().pause(this.id);
+    });
+    this._toastElement.addEventListener("mouseleave", () => {
+      Toaster.getInstance().resume(this.id);
+    });
 
-    const spanElement = this._toastElement.querySelector("[data-id='dot-separator']") as HTMLSpanElement | null;
+    const spanElement = this._toastElement.querySelector(
+      "[data-id='dot-separator']",
+    ) as HTMLSpanElement | null;
     if (!spanElement) return;
 
-    const svgTextColorElement = this._toastElement.querySelector("[data-id='svg-text-color']") as
-      | HTMLDivElement
-      | null;
+    const svgTextColorElement = this._toastElement.querySelector(
+      "[data-id='svg-text-color']",
+    ) as HTMLDivElement | null;
     if (!svgTextColorElement) return;
 
-    const messageElement = this._toastElement.querySelector("[data-id='message']") as HTMLDivElement | null;
+    const messageElement = this._toastElement.querySelector(
+      "[data-id='message']",
+    ) as HTMLDivElement | null;
     if (!messageElement) return;
 
     messageElement.textContent = this.message;
@@ -284,7 +293,7 @@ export class Toaster {
       clearTimeout(timeout);
       this.toastToTimeout.delete(id);
     }
-    const toastIndexToRemove = this.toasts.findIndex(v => v.id === id);
+    const toastIndexToRemove = this.toasts.findIndex((v) => v.id === id);
     if (toastIndexToRemove < 0) return;
     if (this.toasts[toastIndexToRemove] === undefined) return;
 

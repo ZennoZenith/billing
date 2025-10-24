@@ -4,7 +4,9 @@ class WebComponent extends HTMLElement {
 
   constructor(templateId: string) {
     super();
-    const maybeTemplate = document.getElementById(templateId) as HTMLTemplateElement | null;
+    const maybeTemplate = document.getElementById(
+      templateId,
+    ) as HTMLTemplateElement | null;
 
     if (!maybeTemplate) {
       throw new Error(`template element with id=${templateId} not found`);
@@ -12,7 +14,9 @@ class WebComponent extends HTMLElement {
 
     this.template = maybeTemplate;
 
-    const templateContent = this.template.content.cloneNode(true) as DocumentFragment;
+    const templateContent = this.template.content.cloneNode(
+      true,
+    ) as DocumentFragment;
 
     this.templateContent = templateContent;
   }

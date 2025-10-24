@@ -1,27 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="forest">
+<html lang="en" data-theme="cupcake">
   <head>
-    {% include "head.html" %}
-    <title>Sign in to your account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    >
+
+    <title>Signup</title>
+    <link rel="stylesheet" href="/static/css/build/tailwind.css">
+    <style>
+    @import url("/static/css/build/tailwind.css");
+
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+    html {
+      /* font-family: "IBM Plex Sans", sans-serif; */
+      font-family: "IBM Plex Sans", Poppins, Segoe UI, sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400;
+      font-style: normal;
+      font-variation-settings: "wdth" 100;
+    }
+    </style>
   </head>
   <body>
     <div class="flex h-screen w-screen">
       <main class="relative flex w-full flex-col justify-center gap-y-8 px-12 sm:mx-auto sm:basis-[420px] sm:px-0 lg:basis-[480px] lg:px-12">
         <div class="flex items-center justify-between">
-          <a href="/">Example Title</a>
+          <a href="/">Brand Name</a>
           <button class="">Theme toggle</button>
         </div>
         <div class="space-y-1.5">
           <h2 class="text-2xl font-semibold tracking-tight">
-            Sign in to your account
+            Create a new account
           </h2>
           <div>
-            <span class="opacity-75">Don't have an account?</span>
+            <span class="opacity-75"> Already have an account? </span>
             <a
               class="inline-flex scale-100 items-center justify-center rounded-sm text-sm font-medium ring-offset-background transition-[transform,background-color] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 text-content underline-offset-4 hover:underline h-auto px-1.5"
-              href="/register"
+              href="/login"
               data-discover="true"
-            >Create one now
+            >
+              Sign in now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -38,10 +63,29 @@
         </div>
         <section>
           <form
-            id="b20147b0-8962-4953-aec2-a89884b6e5cd"
-            method="post"
+            id="register-form"
             class="flex flex-col gap-y-4"
+            data-on-registerpost__window="$result = evt.detail"
           >
+            <div>
+              <div data-text="$result"></div>
+              <label class="grid w-full space-y-1">
+                <span
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-60"
+                >Name</span>
+                <input
+                  autocomplete="name"
+                  class="flex h-9 w-full rounded border border-base-300 bg-transparent px-3 py-0.5 text-sm ring-0 ring-offset-transparent transition-colors placeholder:opacity-80 hover:bg-secondary/20 focus:border-primary focus:bg-secondary/20 focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none file:border-0 file:bg-transparent file:pt-1 file:text-sm file:font-medium file:text-primary"
+                  type="text"
+                  placeholder="John Doe"
+                  name="name"
+                  aria-invalid="false"
+                  value=""
+                  required
+                  data-bind-name
+                >
+              </label>
+            </div>
             <div>
               <label class="grid w-full space-y-1">
                 <span
@@ -56,8 +100,15 @@
                   aria-invalid="false"
                   value=""
                   required
+                  data-bind-email
                 >
               </label>
+              <span
+                class="text-error flex items-center gap-2 px-1 text-[0.6875rem]"
+              >
+                <span class="status status-error inline-block"> </span> User
+                already exist
+              </span>
             </div>
             <div>
               <label class="grid w-full space-y-1">
@@ -72,24 +123,41 @@
                   aria-invalid="false"
                   value=""
                   required
+                  data-bind-pwd-clear
                 >
               </label>
+              <span
+                class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem]"
+              >
+                <span class="status status-error inline-block"> </span> Password
+                must be 8+ characters
+              </span>
               <p class="text-xs leading-relaxed opacity-60">
                 Hold <code class="text-xs font-bold">Ctrl</code> to display your
                 password temporarily.
               </p>
             </div>
+
+            <div>
+              <label
+                class="text-base-content/60 flex items-center gap-2 text-xs"
+              ><input type="checkbox" class="toggle toggle-xs" name="toc">
+                Accept terms without reading</label>
+            </div>
+            <div>
+              <label
+                class="text-base-content/60 flex items-center gap-2 text-xs"
+              ><input type="checkbox" class="toggle toggle-xs" name="sub-email">
+                Subscribe to spam emails</label>
+            </div>
+
             <div class="mt-4 flex items-center gap-x-4">
               <button
                 type="submit"
                 class="inline-flex scale-100 items-center justify-center rounded-sm text-sm font-medium ring-offset-background transition-[transform,background-color] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 bg-base-content text-base-300 hover:bg-base-content/80 h-9 px-5 flex-1"
               >
-                Sign in
+                Sign up
               </button>
-              <a
-                class="inline-flex scale-100 items-center justify-center rounded-sm text-sm font-medium ring-offset-background transition-[transform,background-color] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 text-base-content underline-offset-4 hover:underline h-auto px-4"
-                href="/forgot-password"
-              >Forgot Password?</a>
             </div>
           </form>
         </section>
@@ -132,19 +200,16 @@
           height="1080"
           alt="Open books on a table"
           class="h-screen w-full object-cover object-center"
-          src="/static/images/patrick-tomasso-Oaqk7qqNh_c-unsplash.jpg"
+          src="/static/images/login/background-variant-1.jpg"
         >
         <div class="absolute bottom-5 right-5 z-10 bg-primary/30 px-4 py-2 text-xs font-medium text-primary-foreground backdrop-blur-sm">
           <a
             target="_blank"
             rel="noopener noreferrer nofollow"
-            href="https://unsplash.com/photos/Oaqk7qqNh_c"
-          >Photograph by Patrick Tomasso</a>
+            href="https://www.pexels.com/photo/purple-abstract-illustration-3109850/"
+          >Photograph by Anni Roenkae</a>
         </div>
       </div>
     </div>
   </body>
-
-  <script defer src="/static/js/build/login.js">
-  </script>
 </html>
