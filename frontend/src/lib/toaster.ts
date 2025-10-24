@@ -5,7 +5,6 @@ import {
   DEFAULT_TOAST_HOVER,
 } from "$utils/constants.js";
 import { clamp, exhaustiveMatchingGuard, uuidv4 } from "$utils/helpers.js";
-import { Log } from "$utils/logger.js";
 
 export const TOAST_TYPES: ToastType[] = [
   "INFO",

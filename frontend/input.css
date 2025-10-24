@@ -1,10 +1,15 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
+
+/* biome-ignore lint/suspicious/noUnknownAtRules: abc */
 @plugin "daisyui" {
+  /* biome-ignore lint/correctness/noUnknownProperty: abc */
   themes: all;
 }
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: abc */
 @plugin "daisyui/theme" {
+  /* biome-ignore lint/correctness/noUnknownProperty: abc */
   name: "chillecho";
   /* prefersdark: true;
   color-scheme: "dark"; */
@@ -38,6 +43,7 @@
   --noise: 0;
 }
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: abc */
 @theme {
   --font-display: "Satoshi", "sans-serif";
   --font-family-sans:
