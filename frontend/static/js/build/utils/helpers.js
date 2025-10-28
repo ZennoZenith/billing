@@ -6,7 +6,7 @@ export function uuidv4() {
     if (randomValue === undefined) {
         throw new Error("Unable to generate random uuidv4");
     }
-    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (+c ^ randomValue & 15 >> +c / 4).toString(16));
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => (+c ^ (randomValue & (15 >> (+c / 4)))).toString(16));
 }
 export const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 export function isEmptyString(str) {
@@ -22,9 +22,7 @@ export function setEmptyStringAsNullish(value) {
     return value?.trim();
 }
 export function uniqByKeepLast(data, key) {
-    return [
-        ...new Map(data.map(x => [key(x), x])).values(),
-    ];
+    return [...new Map(data.map((x) => [key(x), x])).values()];
 }
 export function exhaustiveMatchingGuard(_, message) {
     throw new Error(message ?? "Should not have reached here");

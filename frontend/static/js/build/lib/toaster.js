@@ -1,4 +1,4 @@
-import { DEFAULT_TOAST_CLOSE_DURATION, DEFAULT_TOAST_DURATION, DEFAULT_TOAST_HOVER } from "../utils/constants.js";
+import { DEFAULT_TOAST_CLOSE_DURATION, DEFAULT_TOAST_DURATION, DEFAULT_TOAST_HOVER, } from "../utils/constants.js";
 import { clamp, exhaustiveMatchingGuard, uuidv4 } from "../utils/helpers.js";
 export const TOAST_TYPES = [
     "INFO",
@@ -79,7 +79,9 @@ class Toast {
         if (titleElement) {
             titleElement.textContent = this.title;
         }
-        this._toastElement.querySelector("[data-id='closeButton']")?.addEventListener("click", () => {
+        this._toastElement
+            .querySelector("[data-id='closeButton']")
+            ?.addEventListener("click", () => {
             Toaster.getInstance().remove(this.id);
         });
         this._toastElement.addEventListener("mouseenter", () => {
@@ -222,7 +224,7 @@ export class Toaster {
             clearTimeout(timeout);
             this.toastToTimeout.delete(id);
         }
-        const toastIndexToRemove = this.toasts.findIndex(v => v.id === id);
+        const toastIndexToRemove = this.toasts.findIndex((v) => v.id === id);
         if (toastIndexToRemove < 0)
             return;
         if (this.toasts[toastIndexToRemove] === undefined)

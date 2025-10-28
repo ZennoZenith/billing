@@ -8,7 +8,8 @@ export class Signal {
         return this._value;
     }
     set value(newValue) {
-        if (newValue !== this._value) { // Only notify if the value actually changed
+        if (newValue !== this._value) {
+            // Only notify if the value actually changed
             this._value = newValue;
             this.notifySubscribers();
         }
@@ -20,7 +21,9 @@ export class Signal {
         this.subscribers.delete(subscriber);
     }
     notifySubscribers() {
-        this.subscribers.forEach(subscriber => subscriber(this._value));
+        this.subscribers.forEach((subscriber) => {
+            subscriber(this._value);
+        });
     }
 }
 // // Usage example:

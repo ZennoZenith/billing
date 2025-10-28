@@ -10,6 +10,7 @@ members = [
   "crates/libs/lib-core",
   "crates/libs/lib-web",
   "crates/libs/lib-utils", # e.g., model, ctx, config.
+  "crates/libs/lib-hotreload",
   # -- Application Services
   "crates/services/web-server",
   # -- Tools

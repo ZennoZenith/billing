@@ -18,6 +18,12 @@ lint:
     echo "Linting"
     biome lint --write
 
+build:
+    just tailwind
+    just tsc
+    just fmt
+    cargo build
+
 dev-db:
     docker run --rm --name pg -p 5432:5432 -e POSTGRES_PASSWORD=welcome postgres:18
 
@@ -25,14 +31,13 @@ test:
     # Unit Test (watch)
     cargo test -- --nocapture
 
-[working-directory: 'frontend']
-tailwind:
-    bunx @tailwindcss/cli -i ./input.css -o ./static/css/build/tailwind.css
-
 run-server:
     cargo run -p web-server
 
-build-run-server: tailwind 
+run-server-hot-reload:
+    cargo run -p web-server --bin web-server-hot-reload --features hot_reload
+
+build-run-server: build
     cargo run -p web-server
 
 watch-build-run-server: 
@@ -47,6 +52,20 @@ watch-build-run-server:
     
 watch:
     watchexec -q -c -w crates/services/web-server/src/ -w crates/libs/ -w .cargo/ -r --stop-signal SIGKILL "cargo run -p web-server"
+
+[working-directory: 'frontend']
+tailwind:
+    bunx @tailwindcss/cli -i ./input.css -o ./static/css/build/tailwind.css
+
+tailwind-watch:
+    watchexec -q -c -w frontend/templates -w frontend/input.css -r --stop-signal SIGKILL "just tailwind"
+
+[working-directory: 'frontend']
+tsc:
+    bun run build
+
+tsc-watch:
+    watchexec -q -c -w frontend/src/ -w frontend/tsconfig.json -r --stop-signal SIGKILL "just tsc"
 
 watch-example:
     watchexec -q -c -w crates/services/web-server/examples/ -r --stop-signal SIGKILL "cargo run -p web-server --example quick_dev"

@@ -10,7 +10,7 @@
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-black: #000;
     --spacing: 0.25rem;
-    --container-xl: 36rem;
+    --container-md: 28rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
@@ -1790,9 +1790,9 @@
       display: block;
     }
   }
-  .lg\:w-xl {
+  .lg\:max-w-md {
     @media (width >= 64rem) {
-      width: var(--container-xl);
+      max-width: var(--container-md);
     }
   }
 }

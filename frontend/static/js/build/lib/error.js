@@ -86,10 +86,10 @@ export class UnknowError extends CustomError {
     error;
     constructor(error) {
         let message = "Unknow Message";
-        if (typeof error === "object"
-            && error !== null
-            && "message" in error
-            && typeof error.message === "string")
+        if (typeof error === "object" &&
+            error !== null &&
+            "message" in error &&
+            typeof error.message === "string")
             message = error.message;
         super("UnknownError", message);
         if (error instanceof Error) {
@@ -103,10 +103,10 @@ export class TagedError extends CustomError {
     error;
     constructor(error) {
         let message = "Unknow Message";
-        if (typeof error === "object"
-            && error !== null
-            && "message" in error
-            && typeof error.message === "string")
+        if (typeof error === "object" &&
+            error !== null &&
+            "message" in error &&
+            typeof error.message === "string")
             message = error.message;
         super(error._tag, message);
         if (error instanceof Error) {

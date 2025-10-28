@@ -8,6 +8,7 @@ edition = "2024"
 lib-auth = { path = "../../libs/lib-auth" }
 lib-core = { path = "../../libs/lib-core" }
 lib-utils = { path = "../../libs/lib-utils" }
+lib-hotreload = { path = "../../libs/lib-hotreload", optional = true }
 
 # -- Async
 # -- Web
@@ -30,3 +31,7 @@ uuid = { workspace = true }
 
 [lints]
 workspace = true
+
+[features]
+default = []
+hot_reload = ["dep:lib-hotreload"]
