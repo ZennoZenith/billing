@@ -4,6 +4,9 @@ export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
+export type LightDark = "light" | "dark";
+export type Theme = "cupcake" | "forest";
+
 export type ToastType = "INFO" | "SUCCESS" | "WARNING" | "ERROR";
 export type LogLevelType = "DEBUG" | "INFO" | "WARN" | "ERROR" | "CRITICAL";
 export type Hover = "pause" | "pause-all" | null;

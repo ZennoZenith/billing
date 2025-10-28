@@ -1,4 +1,4 @@
-import type { Taged } from "$type/index.js";
+import type { Taged } from "$types/index.js";
 
 export class Result<T, E extends Taged> {
   #ok?: T;

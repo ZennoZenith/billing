@@ -1,86 +1,85 @@
-<script src="/static/js/build/components.js" type="module"></script>
-<script src="/static/js/build/lib/toaster.js" type="module"></script>
+<template id="toast-container-template">
+  <div
+    id="toast-container"
+    class="fixed max-h-dvh right-0 top-0 z-50 p-4 flex flex-col items-end gap-2 md:bottom-0 md:top-auto overflow-y-scroll overflow-x-hidden"
+  >
+  </div>
 
-<style>
-@-webkit-keyframes toastSlideInRight {
-  from {
-    -webkit-transform: translate3d(115%, 0, 0);
-    transform: translate3d(115%, 0, 0);
-    visibility: visible;
+  <style>
+  @-webkit-keyframes toastSlideInRight {
+    from {
+      -webkit-transform: translate3d(115%, 0, 0);
+      transform: translate3d(115%, 0, 0);
+      visibility: visible;
+    }
+
+    to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
   }
 
-  to {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
+  @keyframes toastSlideInRight {
+    from {
+      -webkit-transform: translate3d(115%, 0, 0);
+      transform: translate3d(115%, 0, 0);
+      visibility: visible;
+    }
 
-@keyframes toastSlideInRight {
-  from {
-    -webkit-transform: translate3d(115%, 0, 0);
-    transform: translate3d(115%, 0, 0);
-    visibility: visible;
-  }
-
-  to {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@-webkit-keyframes toastSlideOutRight {
-  from {
-    -webkit-transform: translate3d(0%, 0, 0);
-    transform: translate3d(0, 0, 0);
-    visibility: visible;
+    to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
   }
 
-  to {
-    -webkit-transform: translate3d(115%, 0, 0);
-    transform: translate3d(115%, , 0, 0);
+  @-webkit-keyframes toastSlideOutRight {
+    from {
+      -webkit-transform: translate3d(0%, 0, 0);
+      transform: translate3d(0, 0, 0);
+      visibility: visible;
+    }
+
+    to {
+      -webkit-transform: translate3d(115%, 0, 0);
+      transform: translate3d(115%, , 0, 0);
+    }
   }
-}
 
-@keyframes toastSlideOutRight {
-  from {
-    -webkit-transform: translate3d(0%, 0, 0);
-    transform: translate3d(0, 0, 0);
-    visibility: visible;
+  @keyframes toastSlideOutRight {
+    from {
+      -webkit-transform: translate3d(0%, 0, 0);
+      transform: translate3d(0, 0, 0);
+      visibility: visible;
+    }
+
+    to {
+      -webkit-transform: translate3d(115%, 0, 0);
+      transform: translate3d(115%, , 0, 0);
+    }
   }
 
-  to {
-    -webkit-transform: translate3d(115%, 0, 0);
-    transform: translate3d(115%, , 0, 0);
+  .toastSlideOutRight {
+    -webkit-animation-name: toastSlideOutRight;
+    animation-name: toastSlideOutRight;
   }
-}
 
-.toastSlideOutRight {
-  -webkit-animation-name: toastSlideOutRight;
-  animation-name: toastSlideOutRight;
-}
+  .toastSlideInRight {
+    -webkit-animation-name: toastSlideInRight;
+    animation-name: toastSlideInRight;
+  }
 
-.toastSlideInRight {
-  -webkit-animation-name: toastSlideInRight;
-  animation-name: toastSlideInRight;
-}
+  .animated {
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
 
-.animated {
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-#toast-container {
-  transition: all 0.3s ease;
-}
-</style>
-
-<div
-  id="toast-container"
-  class="fixed max-h-dvh right-0 top-0 z-50 p-4 flex flex-col items-end gap-2 md:bottom-0 md:top-auto overflow-y-scroll overflow-x-hidden"
->
-</div>
+  #toast-container {
+    transition: all 0.3s ease;
+  }
+  </style>
+</template>
 
 <template id="toast-template">
   <div
@@ -100,7 +99,7 @@
     <div class="relative flex w-[24rem] max-w-[calc(100vw-2rem)] items-center justify-between gap-4 p-5 pt-6">
       <div>
         <h3 class="flex items-center gap-2 font-semibold">
-          <div data-id="svg-text-color"></div>
+          <span data-id="svg-text-color" class="block"></span>
 
           <span data-id="title"></span>
 

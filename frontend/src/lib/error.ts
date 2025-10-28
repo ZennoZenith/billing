@@ -1,4 +1,4 @@
-import type { InternalApiError, Taged } from "$type/index.js";
+import type { InternalApiError, Taged } from "$types/index.js";
 
 const errorType = [
   "UnknownError",

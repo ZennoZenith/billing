@@ -29,9 +29,7 @@ export class Signal<T> {
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach((subscriber) => {
-      subscriber(this._value);
-    });
+    this.subscribers.forEach((subscriber) => subscriber(this._value));
   }
 }
 

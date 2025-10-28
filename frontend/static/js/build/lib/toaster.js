@@ -1,5 +1,6 @@
 import { DEFAULT_TOAST_CLOSE_DURATION, DEFAULT_TOAST_DURATION, DEFAULT_TOAST_HOVER, } from "../utils/constants.js";
 import { clamp, exhaustiveMatchingGuard, uuidv4 } from "../utils/helpers.js";
+import { WebComponentRegistery } from "./components.js";
 export const TOAST_TYPES = [
     "INFO",
     "SUCCESS",
@@ -186,11 +187,20 @@ export class Toaster {
     toasts;
     toasted;
     constructor() {
-        const maybeElement = document.getElementById("toast-container");
-        if (!maybeElement) {
-            throw new Error("toast-container does not exists");
+        const maybeTemplate = document.getElementById("toast-container-template");
+        if (!maybeTemplate) {
+            throw new Error("toast-container-template not found");
         }
-        this.toastContainer = maybeElement;
+        const templateContent = maybeTemplate.content.cloneNode(true);
+        const templateContentDiv = templateContent.querySelector("div");
+        const templateContentStyle = templateContent.querySelector("style");
+        if (!templateContentDiv) {
+            throw new Error("toast-container-template does not have div element");
+        }
+        document.body.append(templateContentDiv);
+        if (templateContentStyle)
+            document.head.appendChild(templateContentStyle);
+        this.toastContainer = templateContentDiv;
         this.toasts = [];
         this.toasted = [];
     }
@@ -306,4 +316,13 @@ export class Toaster {
     error(message, title = "", durationMs) {
         this.add("ERROR", message, title, durationMs);
     }
+}
+export function setupToaster() {
+    // registerWebComponents
+    WebComponentRegistery.register("close-cross-svg");
+    WebComponentRegistery.register("info-svg");
+    WebComponentRegistery.register("success-svg");
+    WebComponentRegistery.register("warning-svg");
+    WebComponentRegistery.register("error-svg");
+    WebComponentRegistery.register("toast-container-template");
 }

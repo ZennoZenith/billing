@@ -1,5 +1,5 @@
 import { isErr } from "$lib/superposition.js";
-import type { LogLevelType } from "$type/index.js";
+import type { LogLevelType } from "$types/index.js";
 import { LOG_LEVEL } from "$utils/constants.js";
 import { exhaustiveMatchingGuard, toLogLevel } from "$utils/helpers.js";
 import { catchErrorSync } from "$utils/index.js";

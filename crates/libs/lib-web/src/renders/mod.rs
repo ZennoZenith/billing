@@ -4,6 +4,7 @@ use axum::response::Html;
 use tera::Context;
 
 pub mod auth;
+pub mod seller;
 
 pub async fn fallback_render_not_found(uri: Uri) -> Result<Html<String>> {
     let mut context = Context::new();

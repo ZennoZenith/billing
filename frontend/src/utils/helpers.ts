@@ -1,4 +1,4 @@
-import type { LogLevelType } from "$type/index.js";
+import type { LogLevelType } from "$types/index.js";
 
 export function uuidv4() {
   if (window?.isSecureContext) {

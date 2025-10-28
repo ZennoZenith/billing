@@ -21,9 +21,7 @@ export class Signal {
         this.subscribers.delete(subscriber);
     }
     notifySubscribers() {
-        this.subscribers.forEach((subscriber) => {
-            subscriber(this._value);
-        });
+        this.subscribers.forEach((subscriber) => subscriber(this._value));
     }
 }
 // // Usage example:

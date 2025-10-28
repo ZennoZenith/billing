@@ -1,10 +1,11 @@
-import type { Hover, ToastType } from "$type/index.ts";
+import type { Hover, ToastType } from "$types/index.js";
 import {
   DEFAULT_TOAST_CLOSE_DURATION,
   DEFAULT_TOAST_DURATION,
   DEFAULT_TOAST_HOVER,
 } from "$utils/constants.js";
 import { clamp, exhaustiveMatchingGuard, uuidv4 } from "$utils/helpers.js";
+import { WebComponentRegistery } from "./components.js";
 
 export const TOAST_TYPES: ToastType[] = [
   "INFO",
@@ -74,12 +75,14 @@ class Toast {
     this.durationMs = durationMs < 0 ? 0 : durationMs;
     this.createdAtMs = now;
     this._paused = options?.paused ?? false;
+
     const maybeTemplate = document.getElementById(
       "toast-template",
     ) as HTMLTemplateElement | null;
     if (!maybeTemplate) {
       throw new Error("toast-template not found");
     }
+
     const templateContent = maybeTemplate.content.cloneNode(
       true,
     ) as DocumentFragment;
@@ -240,11 +243,26 @@ export class Toaster {
   private toasted: Toast[];
 
   private constructor() {
-    const maybeElement = document.getElementById("toast-container");
-    if (!maybeElement) {
-      throw new Error("toast-container does not exists");
+    const maybeTemplate = document.getElementById(
+      "toast-container-template",
+    ) as HTMLTemplateElement | null;
+    if (!maybeTemplate) {
+      throw new Error("toast-container-template not found");
     }
-    this.toastContainer = maybeElement;
+
+    const templateContent = maybeTemplate.content.cloneNode(
+      true,
+    ) as DocumentFragment;
+    const templateContentDiv = templateContent.querySelector("div");
+    const templateContentStyle = templateContent.querySelector("style");
+    if (!templateContentDiv) {
+      throw new Error("toast-container-template does not have div element");
+    }
+
+    document.body.append(templateContentDiv);
+    if (templateContentStyle) document.head.appendChild(templateContentStyle);
+
+    this.toastContainer = templateContentDiv;
     this.toasts = [];
     this.toasted = [];
   }
@@ -383,4 +401,14 @@ export class Toaster {
   public error(message: string, title = "", durationMs?: number) {
     this.add("ERROR", message, title, durationMs);
   }
+}
+
+export function setupToaster() {
+  // registerWebComponents
+  WebComponentRegistery.register("close-cross-svg");
+  WebComponentRegistery.register("info-svg");
+  WebComponentRegistery.register("success-svg");
+  WebComponentRegistery.register("warning-svg");
+  WebComponentRegistery.register("error-svg");
+  WebComponentRegistery.register("toast-container-template");
 }
