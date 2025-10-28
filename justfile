@@ -5,14 +5,18 @@ alias r := run-server
 default:
     @just --list
 
-fmt:
+[working-directory: 'frontend']
+_fmt-frontend:
+    biome format --write
+    
+fmt: _fmt-frontend
     echo "Formatting"
     cargo fmt
-    cd frontend && biome format --write
 
+[working-directory: 'frontend']
 lint:
     echo "Linting"
-    cd frontend && biome lint --write
+    biome lint --write
 
 dev-db:
     docker run --rm --name pg -p 5432:5432 -e POSTGRES_PASSWORD=welcome postgres:18
