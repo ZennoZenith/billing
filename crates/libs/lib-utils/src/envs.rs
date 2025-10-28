@@ -4,7 +4,46 @@ use std::str::FromStr;
 
 // region:    --- Error
 
+pub trait DefaultIfMissing<T> {
+    fn default_if_missing(self) -> Result<T>;
+    fn if_missing(self, value: T) -> Result<T>;
+}
+
 pub type Result<T> = std::result::Result<T, Error>;
+
+impl<T: Default> DefaultIfMissing<T> for Result<T> {
+    fn default_if_missing(self) -> Result<T> {
+        match self {
+            Err(Error::MissingEnv(env_name)) => {
+                #[cfg(feature = "tracing")]
+                tracing::warn!(
+                    "{:<12} - {}, using default",
+                    "MISSING-ENV",
+                    env_name
+                );
+
+                Ok(T::default())
+            }
+            _ => self,
+        }
+    }
+
+    fn if_missing(self, value: T) -> Result<T> {
+        match self {
+            Err(Error::MissingEnv(env_name)) => {
+                #[cfg(feature = "tracing")]
+                tracing::warn!(
+                    "{:<12} - {}, using value from code",
+                    "MISSING-ENV",
+                    env_name
+                );
+
+                Ok(value)
+            }
+            _ => self,
+        }
+    }
+}
 
 #[derive(thiserror::Error, Debug, strum_macros::Display)]
 pub enum Error {

@@ -17,9 +17,10 @@ thiserror = { workspace = true }
 strum_macros = { workspace = true }
 serde = { workspace = true, optional = true }
 sqlx = { workspace = true, optional = true, features = ["postgres", "time"] }
+tracing = { workspace = true, optional = true }
 
 [features]
-default = []
-# default = ["serde"]
+default = ["tracing"]
 serde = ["dep:serde"]
 sqlx = ["dep:sqlx"]
+tracing = ["dep:tracing"]

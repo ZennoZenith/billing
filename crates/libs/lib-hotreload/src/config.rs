@@ -1,4 +1,4 @@
-use lib_utils::envs::get_env_parse;
+use lib_utils::envs::{DefaultIfMissing, get_env_parse};
 use std::{path::PathBuf, sync::OnceLock};
 
 pub fn reload_config() -> &'static ReloadConfig {
@@ -32,60 +32,26 @@ pub struct ReloadConfig {
 
 impl ReloadConfig {
     fn load_from_env() -> lib_utils::envs::Result<ReloadConfig> {
-        let hard_reload = match get_env_parse::<bool>(
-            "SERVICE_HOT_RELOAD_HARD_RELOAD",
-        ) {
-            Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                tracing::warn!(
-                    "{:<12} - SERVICE_HOT_RELOAD_HARD_RELOAD, using default",
-                    "MISSING-ENV"
-                );
-                Ok(false)
-            }
-            rest => rest,
-        };
+        let hard_reload =
+            get_env_parse::<bool>("SERVICE_HOT_RELOAD_HARD_RELOAD")
+                .default_if_missing()?;
 
-        let auto_ignore = match get_env_parse::<bool>(
-            "SERVICE_HOT_RELOAD_AUTO_IGNORE",
-        ) {
-            Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                tracing::warn!(
-                    "{:<12} - SERVICE_HOT_RELOAD_AUTO_IGNORE, using default",
-                    "MISSING-ENV"
-                );
-                Ok(false)
-            }
-            rest => rest,
-        };
+        let auto_ignore =
+            get_env_parse::<bool>("SERVICE_HOT_RELOAD_AUTO_IGNORE")
+                .if_missing(false)?;
 
-        let poll = match get_env_parse::<bool>("SERVICE_HOT_RELOAD_POLL") {
-            Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                tracing::warn!(
-                    "{:<12} - SERVICE_HOT_RELOAD_POLL, using default",
-                    "MISSING-ENV"
-                );
-                Ok(false)
-            }
-            rest => rest,
-        };
+        let poll = get_env_parse::<bool>("SERVICE_HOT_RELOAD_POLL")
+            .default_if_missing()?;
 
         let hot_reload_dir: PathBuf =
-            match get_env_parse::<String>("SERVICE_HOT_RELOAD_DIR") {
-                Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                    tracing::warn!(
-                        "{:<12} - SERVICE_HOT_RELOAD_DIR, using default",
-                        "MISSING-ENV"
-                    );
-                    Ok(String::from("frontend/"))
-                }
-                rest => rest,
-            }?
-            .into();
+            get_env_parse::<String>("SERVICE_HOT_RELOAD_DIR")
+                .if_missing(String::from("frontend/"))?
+                .into();
 
         Ok(ReloadConfig {
-            HARD_RELOAD: hard_reload?,
-            AUTO_IGNORE: auto_ignore?,
-            POLL: poll?,
+            HARD_RELOAD: hard_reload,
+            AUTO_IGNORE: auto_ignore,
+            POLL: poll,
             HOT_RELOAD_DIR: hot_reload_dir,
         })
     }

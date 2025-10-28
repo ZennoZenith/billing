@@ -1,6 +1,5 @@
-use lib_utils::envs::{get_env, get_env_parse};
+use lib_utils::envs::{DefaultIfMissing, get_env, get_env_parse};
 use std::{sync::OnceLock, time::Duration};
-use tracing::warn;
 
 pub fn core_config() -> &'static CoreConfig {
     static INSTANCE: OnceLock<CoreConfig> = OnceLock::new();
@@ -23,35 +22,16 @@ pub struct CoreConfig {
 impl CoreConfig {
     fn load_from_env() -> lib_utils::envs::Result<CoreConfig> {
         let db_max_connections =
-            match get_env_parse::<u32>("SERVICE_DB_MAX_CONNECTIONS") {
-                Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                    warn!(
-                        "{:<12} - SERVICE_DB_MAX_CONNECTIONS, using default",
-                        "MISSING-ENV"
-                    );
-                    Ok(5)
-                }
-                rest => rest,
-            };
-        let db_connections_timeout = match get_env_parse::<u64>(
-            "SERVICE_DB_CONNECTION_TIMEOUT_MS",
-        ) {
-            Err(lib_utils::envs::Error::MissingEnv(_)) => {
-                warn!(
-                    "{:<12} - SERVICE_DB_CONNECTION_TIMEOUT_MS, using default",
-                    "MISSING-ENV"
-                );
-                Ok(500)
-            }
-            rest => rest,
-        }?;
+            get_env_parse::<u32>("SERVICE_DB_MAX_CONNECTIONS").if_missing(5)?;
+        let db_connections_timeout =
+            get_env_parse::<u64>("SERVICE_DB_CONNECTION_TIMEOUT_MS")
+                .if_missing(500)
+                .map(Duration::from_millis)?;
 
         Ok(CoreConfig {
             DB_URL: get_env("SERVICE_DB_URL")?,
-            DB_MAX_CONNECTIONS: db_max_connections?,
-            DB_CONNECTION_TIMEOUT: Duration::from_millis(
-                db_connections_timeout,
-            ),
+            DB_MAX_CONNECTIONS: db_max_connections,
+            DB_CONNECTION_TIMEOUT: db_connections_timeout,
         })
     }
 }
