@@ -38,7 +38,7 @@ SERVICE_TEMPLATE_FOLDER = "frontend/templates"
 SERVICE_STATIC_FOLDER = "frontend/static"
 
 ## Hot reloading configs
-SERVICE_HOT_RELOAD_HARD_RELOAD = "false"
+SERVICE_HOT_RELOAD_HARD_RELOAD = "true"
 SERVICE_HOT_RELOAD_AUTO_IGNORE = "false"
 SERVICE_HOT_RELOAD_POLL = "false"
 SERVICE_HOT_RELOAD_DIR = "frontend/"

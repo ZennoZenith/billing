@@ -1,0 +1,11 @@
+<tbody id="search-result-body">
+  {% for seller in sellers %}
+  <!-- row {{loop.index}} -->
+  <tr>
+    <td>{{seller.name}}</td>
+    <td>{{seller.sellerId}}</td>
+  </tr>
+
+  <!--  -->
+  {% endfor %}
+</tbody>

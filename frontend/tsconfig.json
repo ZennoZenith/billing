@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "$type": ["./src/types"],
-      "$type/*": ["./src/types/*"],
+      "$types": ["./src/types"],
+      "$types/*": ["./src/types/*"],
       "$utils": ["./src/utils"],
       "$utils/*": ["./src/utils/*"],
       "$api": ["./src/api"],
