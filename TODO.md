@@ -1,4 +1,4 @@
-- Convert user typ from enum to table
+- Handle fallback error according to header type
 - ON DELETE CASCADE => ON DELETE RESTRICT,
 -
 - Retry bill id uniqueness

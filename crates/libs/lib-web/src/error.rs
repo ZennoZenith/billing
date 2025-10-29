@@ -1,4 +1,4 @@
-use crate::extractors::JsonOrFormError;
+use crate::extractors::{DatastarQueryError, JsonOrFormError};
 use crate::middleware;
 use axum::extract::rejection::{FormRejection, JsonRejection};
 use axum::http::StatusCode;
@@ -31,6 +31,10 @@ pub enum Error {
     // -- Query Deserialization
     #[error("QueryDeserialization: {0}")]
     QueryDeserialization(String),
+
+    // -- DatastarQuery Deserialization
+    #[error("DatastarQueryDeserialization: {0}")]
+    DatastarQueryDeserialization(&'static str),
 
     // -- Login
     #[error("LoginFailPwdNotMatching: user_id: {user_id}")]
@@ -99,6 +103,23 @@ impl From<JsonOrFormError> for Error {
     }
 }
 
+impl From<DatastarQueryError> for Error {
+    fn from(value: DatastarQueryError) -> Self {
+        match value {
+            DatastarQueryError::NotDatastarRequest => {
+                Self::DatastarQueryDeserialization(
+                    "Query does not contain datastar parameter",
+                )
+            }
+            DatastarQueryError::InvalidDatastarJson => {
+                Self::DatastarQueryDeserialization(
+                    "Query parameter datastar in not valid json",
+                )
+            }
+        }
+    }
+}
+
 // region:    --- Axum IntoResponse
 impl IntoResponse for Error {
     fn into_response(self) -> Response {
@@ -157,6 +178,11 @@ impl Error {
                 },
             ),
 
+            DatastarQueryDeserialization(v) => (
+                StatusCode::BAD_REQUEST,
+                ClientError::DATASTAR_QUERY_DESERIALIZATION { message: v },
+            ),
+
             // // -- Login
             // LoginFailEmailNotFound
             // | LoginFailUserHasNoPwd { .. } |
@@ -201,6 +227,7 @@ pub enum ClientError {
     JSON_DESERIALIZE { message: &'static str },
     FORM_DESERIALIZE { message: &'static str },
     QUERY_DESERIALIZE { message: &'static str },
+    DATASTAR_QUERY_DESERIALIZATION { message: &'static str },
     LOGIN_FAIL,
     NO_AUTH,
     ENTITY_NOT_FOUND { entity: &'static str, id: String },

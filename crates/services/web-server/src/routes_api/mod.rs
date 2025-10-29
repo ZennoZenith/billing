@@ -1,6 +1,6 @@
 use axum::Router;
 use lib_core::model::ModelManager;
-use lib_web::handlers::handlers_fallback;
+use lib_web::handlers::api::handlers_fallback;
 
 // region:    --- Modules
 mod routes_login;

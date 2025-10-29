@@ -6,11 +6,12 @@ use crate::routes_web::routes_static;
 
 use lib_core::model::ModelManager;
 use lib_web::{
+    handlers::web,
     middleware::{
         mw_auth::mw_ctx_resolver, mw_req_stamp::mw_req_stamp_resolver,
         mw_res_map::mw_reponse_map,
     },
-    renders, web_config,
+    web_config,
 };
 
 use axum::{Router, middleware};
@@ -40,7 +41,7 @@ pub async fn routes() -> Result<Router> {
         )
         .nest("/static", routes_static::server_assets())
         .route_service("/favicon.ico", routes_static::favicon())
-        .fallback(renders::fallback_render_not_found);
+        .fallback(web::fallback_render_not_found);
 
     Ok(router)
 }

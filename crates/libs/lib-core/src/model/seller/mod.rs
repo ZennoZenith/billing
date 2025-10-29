@@ -126,6 +126,48 @@ impl SellerBmc {
 
         Ok(user)
     }
+
+    pub async fn get_all(
+        mm: &ModelManager,
+        limit: Option<i32>,
+    ) -> Result<Vec<Seller>> {
+        let limit = match limit {
+            Some(v) if (1..=50).contains(&v) => v,
+            _ => 10,
+        };
+
+        let sqlx_query = sqlx::query_as::<_, Seller>(
+            "select seller_id, name from seller limit $1;",
+        )
+        .bind(limit);
+
+        let sellers = mm.dbx().fetch_all(sqlx_query).await?;
+
+        Ok(sellers)
+    }
+
+    pub async fn search_by_name(
+        mm: &ModelManager,
+        name: &str,
+        limit: Option<i32>,
+    ) -> Result<Vec<Seller>> {
+        let limit = match limit {
+            Some(v) if (1..=50).contains(&v) => v,
+            _ => 10,
+        };
+
+        let search_name = format!("%{}%", name);
+
+        let sqlx_query = sqlx::query_as::<_, Seller>(
+            "select seller_id, name from seller where name ilike $1 limit $2;",
+        )
+        .bind(search_name)
+        .bind(limit);
+
+        let sellers = mm.dbx().fetch_all(sqlx_query).await?;
+
+        Ok(sellers)
+    }
 }
 
 // region:    --- Tests

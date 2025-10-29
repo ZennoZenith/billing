@@ -5,7 +5,6 @@ pub mod extractors;
 pub mod handlers;
 pub mod log;
 pub mod middleware;
-pub mod renders;
 pub mod tera;
 pub mod utils;
 

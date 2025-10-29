@@ -1,7 +1,9 @@
 use axum::Router;
 use axum::routing::post;
 use lib_core::model::ModelManager;
-use lib_web::handlers::{handlers_bill, handlers_seller, handlers_transaction};
+use lib_web::handlers::api::{
+    handlers_bill, handlers_seller, handlers_transaction,
+};
 
 pub fn routes(mm: ModelManager) -> Router {
     Router::new()

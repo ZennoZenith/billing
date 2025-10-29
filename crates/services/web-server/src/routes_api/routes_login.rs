@@ -1,7 +1,7 @@
 use axum::Router;
 use axum::routing::post;
 use lib_core::model::ModelManager;
-use lib_web::handlers::handlers_login;
+use lib_web::handlers::api::handlers_login;
 
 pub fn routes(mm: ModelManager) -> Router {
     Router::new()

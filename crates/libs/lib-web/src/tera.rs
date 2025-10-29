@@ -70,6 +70,16 @@ pub fn render(template_name: &str, context: &Context) -> Result<Html<String>> {
     t
 }
 
+pub fn render_fragmant(
+    template_name: &str,
+    context: &Context,
+) -> Result<Html<String>> {
+    tera_instance()
+        .render(template_name, context)
+        .map(Html)
+        .map_err(Error::TeraRender)
+}
+
 #[cfg(feature = "hot_reload")]
 pub fn reload_tera() -> std::result::Result<(), tera::Error> {
     tera_instance_hot_reload().write().unwrap().full_reload()
