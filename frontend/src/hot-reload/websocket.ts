@@ -34,6 +34,11 @@ async function liveReload(hard: boolean) {
   let scheduled = false; // if another reload is scheduled while the page is being reloaded
 
   async function reload() {
+    if (hard) {
+      location.reload();
+      return;
+    }
+
     // schedule the reload for later if it's already reloading
     if (reloading) {
       scheduled = true;
@@ -45,6 +50,7 @@ async function liveReload(hard: boolean) {
     while (true) {
       scheduled = false;
       const url = location.origin + location.pathname;
+
       const promises: Promise<void>[] = [];
       preloadNode(document.head, promises);
       preloadNode(document.body, promises);
@@ -79,17 +85,13 @@ async function liveReload(hard: boolean) {
         // do reload if there's no further scheduled reload
         // otherwise, let the next scheduled reload do the job
         if (!scheduled) {
-          if (hard) {
-            location.reload();
-          } else {
-            reloading = false;
-            document.head.replaceWith(ifr.contentDocument.head);
-            document.body.replaceWith(ifr.contentDocument.body);
-            ifr.remove();
-            console.log("[Live Server] Reloaded");
-          }
-          return;
+          reloading = false;
+          document.head.replaceWith(ifr.contentDocument.head);
+          document.body.replaceWith(ifr.contentDocument.body);
+          ifr.remove();
+          console.log("[Live Server] Reloaded");
         }
+        return;
       }
 
       if (ifr) {
