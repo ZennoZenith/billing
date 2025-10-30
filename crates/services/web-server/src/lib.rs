@@ -24,8 +24,8 @@ pub async fn routes() -> Result<Router> {
     let mm = ModelManager::new().await?;
 
     let router = Router::new()
+        .nest("/api", routes_api::routes(mm.clone()))
         .merge(routes_web::routes(mm.clone()))
-        .merge(routes_api::routes(mm.clone()))
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(mw_req_stamp_resolver))
@@ -41,7 +41,7 @@ pub async fn routes() -> Result<Router> {
         )
         .nest("/static", routes_static::server_assets())
         .route_service("/favicon.ico", routes_static::favicon())
-        .fallback(web::fallback_render_not_found);
+        .fallback(web::fallback);
 
     Ok(router)
 }
