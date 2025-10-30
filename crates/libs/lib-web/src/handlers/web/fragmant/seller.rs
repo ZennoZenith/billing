@@ -19,13 +19,9 @@ pub async fn search(
 ) -> Result<impl IntoResponse> {
     let name = query?.0.search;
 
-    dbg!(&name);
-
     let sellers = SellerBmc::search_by_name(&mm, &name, None)
         .await
         .map_err(model::Error::from)?;
-
-    dbg!(&sellers);
 
     let mut context = Context::new();
     context.insert("sellers", &sellers);

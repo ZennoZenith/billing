@@ -65,100 +65,103 @@
   <body>
     <header style="grid-area: head" class="bg-accent">Header</header>
     <nav style="grid-area: nav" class="bg-primary hidden md:block">Nav</nav>
-    <main
-      style="grid-area: main"
-      class="bg-base-100 overflow-y-scroll"
-    >
-      <button
-        class="btn btn-primary ml-4 mt-4"
-        onclick="my_modal_1.showModal()"
-      >
-        Create seller
-      </button>
+    <div style="grid-area: main" class="flex flex-col">
+      <main class="bg-base-100 overflow-y-scroll grow">
+        <button
+          class="btn btn-primary ml-4 mt-4"
+          onclick="my_modal_1.showModal()"
+        >
+          Create seller
+        </button>
 
-      <div class="p-4 flex items-center gap-2">
-        <label class="input">
-          <svg
-            class="h-4 opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              stroke-linejoin="round"
-              stroke-linecap="round"
-              stroke-width="2.5"
-              fill="none"
-              stroke="currentColor"
+        <div class="p-4 flex items-center gap-2">
+          <label class="input">
+            <svg
+              class="h-4 opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
             >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input
-            type="search"
-            required
-            placeholder="Search"
-            data-bind:search
-            data-on:input__debounce.200ms="@get('/fragmant/seller/search')"
-            data-on:datastar-fetch="evt.detail.type === 'error' && console.log('Fetch error encountered')"
-          >
-        </label>
-        <span class="h-8 loading loading-ring loading-xl"></span>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="table table-zebra">
-          <!-- head -->
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Seller Id</th>
-            </tr>
-          </thead>
-          {% include "fragmants/seller/searchResult.html" %}
-        </table>
-      </div>
-
-      <dialog id="my_modal_1" class="modal modal-top md:modal-middle">
-        <div class="modal-box">
-          <h3 class="text-lg font-bold">Create Seller</h3>
-
-          <create-seller-form>
-            <form id="create-seller-form" class="flex flex-col gap-y-4 p-4">
-              <fieldset class="fieldset">
-                <legend class="fieldset-legend">Seller name</legend>
-                <span class="flex gap-1">
-                  <input
-                    type="text"
-                    name="seller-name"
-                    class="input grow h-10"
-                    placeholder="Type here"
-                  >
-                  <button type="reset" class="btn h-10 mx-1">Clear</button>
-                </span>
-              </fieldset>
-            </form>
-          </create-seller-form>
-
-          <div class="modal-action">
-            <form method="dialog">
-              <!-- if there is a button in form, it will close the modal -->
-              <button class="btn h-10">Close</button>
-              <button
-                type="submit"
-                onclick="my_modal_1.close()"
-                form="create-seller-form"
-                class="btn btn-secondary h-10"
+              <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
               >
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input
+              type="search"
+              required
+              placeholder="Search"
+              data-bind:search
+              data-on:input__debounce.200ms="@get('/fragmant/seller/search')"
+              data-on:datastar-fetch="evt.detail.type === 'error' && console.log('Fetch error encountered')"
+              data-indicator:fetching
+            >
+          </label>
 
+          <span
+            data-class:loading="$fetching"
+            class="h-8 loading loading-ring loading-xl"
+          ></span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <!-- head -->
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Seller Id</th>
+              </tr>
+            </thead>
+            {% include "fragmants/seller/searchResult.html" %}
+          </table>
+        </div>
+
+        <dialog id="my_modal_1" class="modal modal-top md:modal-middle">
+          <div class="modal-box">
+            <h3 class="text-lg font-bold">Create Seller</h3>
+
+            <create-seller-form>
+              <form id="create-seller-form" class="flex flex-col gap-y-4 p-4">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend">Seller name</legend>
+                  <span class="flex gap-1">
+                    <input
+                      type="text"
+                      name="seller-name"
+                      class="input grow h-10"
+                      placeholder="Type here"
+                    >
+                    <button type="reset" class="btn h-10 mx-1">Clear</button>
+                  </span>
+                </fieldset>
+              </form>
+            </create-seller-form>
+
+            <div class="modal-action">
+              <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn h-10">Close</button>
+                <button
+                  type="submit"
+                  onclick="my_modal_1.close()"
+                  form="create-seller-form"
+                  class="btn btn-secondary h-10"
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </main>
       {% include "fragmants/footer.html" %}
-    </main>
+    </div>
     {% include "fragmants/defaultTemplates.html" %}
   </body>
 </html>

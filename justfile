@@ -34,6 +34,9 @@ test:
 run-server:
     cargo run -p web-server
 
+run-server-release:
+    cargo run -p web-server --release
+
 run-server-hot-reload:
     cargo run -p web-server --bin web-server-hot-reload --features hot_reload
 

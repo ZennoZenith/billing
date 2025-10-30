@@ -3,7 +3,7 @@ use lib_core::model::ModelManager;
 use lib_web::handlers::web::{auth, seller};
 
 // region:    --- Modules
-pub mod routes_fragmant;
+mod routes_fragmant;
 pub mod routes_static;
 
 // endregion: --- Modules

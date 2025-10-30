@@ -39,6 +39,10 @@
       "env": {
         "NODE_ENV": "test"
       }
+    },
+    "release": {
+      "autostart": false,
+      "shell": "just run-server-release"
     }
   }
 }
